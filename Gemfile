@@ -26,6 +26,7 @@ group :test do
   gem 'capybara', '2.1.0'
   # テスト結果を通知センターに表示する(Mac)
   gem 'terminal-notifier-guard'
+  gem 'factory_girl_rails'
 end
 
 # Use SCSS for stylesheets
