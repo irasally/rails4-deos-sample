@@ -12,7 +12,7 @@ end
 end
 
 ならば(/^エラーメッセージが表示される$/) do
-  expect(page).to have_selector('div.alert.alert-error')
+  expect(page).to have_selector('div.alert.alert-error', text: 'Invalid')
 end
 
 もし(/^存在しないユーザ情報を入力してログインボタンを押す$/) do
