@@ -27,6 +27,9 @@ group :test do
   # テスト結果を通知センターに表示する(Mac)
   gem 'terminal-notifier-guard'
   gem 'factory_girl_rails'
+  # Cucumber
+  gem 'cucumber-rails', '1.4.0', :require => false
+  gem 'database_cleaner', github: 'bmabey/database_cleaner'
 end
 
 # Use SCSS for stylesheets
