@@ -24,7 +24,7 @@ describe "UserPages" do
         before {click_button submit }
         it { should have_title('Sign up') }
         it { should have_content('error') }
-        it { should have_selector('div.alert.alert-error', text: 'The form contains 5 errors.') }
+        it { should have_error_message('The form contains 5 errors.') }
         it { should have_text('* Password can\'t be blank') }
         it { should have_text('* Password is too short (minimum is 6 characters)') }
         it { should have_text('* Name can\'t be blank') }
@@ -33,12 +33,7 @@ describe "UserPages" do
       end
     end
     describe "with valid information" do
-      before do
-        fill_in "Name",         with: "Example User"
-        fill_in "Email",        with: "user@example.com"
-        fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
-      end
+      before{ valid_user_input }
       it "should create a user" do
         expect{ click_button submit }.to change(User, :count).by(1)
       end
@@ -47,7 +42,7 @@ describe "UserPages" do
         let(:user) { User.find_by(email: 'user@example.com')}
         it { should have_link('Sign out') }
         it { should have_title(user.name) }
-        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+        it { should have_success_message('Welcome') }
       end
     end
   end
