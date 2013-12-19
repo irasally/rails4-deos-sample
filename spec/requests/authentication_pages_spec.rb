@@ -73,6 +73,21 @@ describe "AuthenticationPages" do
             end
           end
 
+          describe "when attempting to visit for non-singin user's page " do
+            before { sign_in user, no_capybara: true }
+            describe "submitting a GET request to the Users#new action" do
+              before { get signup_path }
+              specify { expect(response.body).not_to match(full_title('Sign up')) }
+              specify { expect(response).to redirect_to(root_url) }
+            end
+
+            describe "submitting a POST request to the Users#create action" do
+              new_user = User.new(name: 'Test', email: 'hoge@example.com')
+              before { post users_path(new_user) }
+              specify { expect(response).to redirect_to(root_url) }
+            end
+
+          end
         end
       end
 
