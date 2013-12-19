@@ -5,6 +5,9 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.2'
 gem 'bootstrap-sass', '2.3.2.0'
 gem 'bcrypt-ruby' # rspec error: can't activate bcrypt-ruby (~> 3.1.2), '3.0.1'
+gem 'faker', '1.1.2'
+gem 'will_paginate', '3.0.4'
+gem 'bootstrap-will_paginate', '0.0.6'
 
 group :development do
   # Use sqlite3 as the database for Active Record
