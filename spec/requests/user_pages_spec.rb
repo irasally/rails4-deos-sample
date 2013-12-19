@@ -25,7 +25,7 @@ describe "UserPages" do
     end
 
     describe "delete links" do
-      let(:admin) {  FactoryGirl.create(:admin) }
+      let(:admin) { FactoryGirl.create(:admin) }
       before do
         sign_in admin
         visit users_path
