@@ -5,10 +5,9 @@ describe "UserPages" do
   subject { page }
 
   describe "index" do
+    let(:user) { FactoryGirl.create(:user) }
     before do
-      sign_in FactoryGirl.create(:user)
-      FactoryGirl.create(:user, name: "Bob", email: "bob@exaample.com")
-      FactoryGirl.create(:user, name: "Ben", email: "ben@exaample.com")
+      sign_in user
       visit users_path
     end
     it { should have_title('All users') }
@@ -23,6 +22,22 @@ describe "UserPages" do
           expect(page).to have_selector('li', text: user.name)
         end
       end
+    end
+
+    describe "delete links" do
+      let(:admin) {  FactoryGirl.create(:admin) }
+      before do
+        sign_in admin
+        visit users_path
+      end
+
+      it { should have_link('delete', href: user_path(User.first)) }
+      it "should be able to delete another user" do
+        expect do
+          click_link('delete', match: :first)
+        end.to change(User, :count).by(-1)
+      end
+      it { should_not have_link('delete', href: user_path(admin)) }
     end
   end
 
