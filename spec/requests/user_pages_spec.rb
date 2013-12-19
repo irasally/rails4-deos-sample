@@ -124,7 +124,7 @@ describe "UserPages" do
       end
       it { should have_title(new_name) }
       it { should have_success_message('Profile updated') }
-      # 未ログイン状態 TODO  it { should have_link('Sign out', href: signout_path) }
+      it { should have_link('Sign out', href: signout_path) }
       specify { expect(user.reload.name).to eq new_name }
       specify { expect(user.reload.email).to eq new_email }
     end
