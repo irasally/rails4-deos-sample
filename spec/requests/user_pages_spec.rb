@@ -25,7 +25,7 @@ describe "UserPages" do
     end
 
     describe "delete links" do
-      let(:admin) {  FactoryGirl.create(:admin) }
+      let(:admin) { FactoryGirl.create(:admin) }
       before do
         sign_in admin
         visit users_path
@@ -124,9 +124,20 @@ describe "UserPages" do
       end
       it { should have_title(new_name) }
       it { should have_success_message('Profile updated') }
-      # 未ログイン状態 TODO  it { should have_link('Sign out', href: signout_path) }
+      it { should have_link('Sign out', href: signout_path) }
       specify { expect(user.reload.name).to eq new_name }
       specify { expect(user.reload.email).to eq new_email }
+    end
+
+    describe "forbidden attributes" do
+      let(:params) do
+        { user: { admin:true, password: user.password, password_confirmation: user.password,}}
+      end
+      before do
+        sign_in user, no_capybara: true
+        patch user_path(user), params
+      end
+      specify { expect(user.reload).not_to be_admin }
     end
   end
 end
