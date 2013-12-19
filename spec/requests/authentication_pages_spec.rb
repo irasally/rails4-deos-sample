@@ -4,7 +4,7 @@ require 'spec_helper'
 describe "AuthenticationPages" do
   subject{ page }
   describe "signin page" do
-    before{  visit signin_path }
+    before{ visit signin_path }
     it { should have_content('Sign in') }
     it { should have_title('Sign in') }
     it { should_not have_link('Users',     href: users_path)}
@@ -14,7 +14,7 @@ describe "AuthenticationPages" do
   end
 
   describe "signin" do
-    before{  visit signin_path }
+    before{ visit signin_path }
     describe "with invalid information" do
       before { click_button 'Sign in' }
       it { should have_title('Sign in') }
@@ -41,7 +41,7 @@ describe "AuthenticationPages" do
 
     describe "authorization" do
       describe "for non-sign-in users" do
-        let(:user) {  FactoryGirl.create(:user) }
+        let(:user) { FactoryGirl.create(:user) }
 
         describe "in the Users Controller" do
           describe "visiting the edit page" do
@@ -55,7 +55,7 @@ describe "AuthenticationPages" do
           end
 
           describe "visiting the user index" do
-            before {  visit users_path }
+            before { visit users_path }
             it { should have_title('Sign in') }
           end
 
@@ -77,8 +77,8 @@ describe "AuthenticationPages" do
       end
 
       describe "as wrong user" do
-        let(:user) {  FactoryGirl.create(:user) }
-        let(:wrong_user) {  FactoryGirl.create(:user, email: 'wrong@example.com') }
+        let(:user) { FactoryGirl.create(:user) }
+        let(:wrong_user) { FactoryGirl.create(:user, email: 'wrong@example.com') }
         before { sign_in user, no_capybara: true }
 
         describe "submitting a GET request to the Users#edit action" do
@@ -94,8 +94,8 @@ describe "AuthenticationPages" do
       end
 
       describe "as non-admin user" do
-        let(:user) {  FactoryGirl.create(:user) }
-        let(:non_admin) {  FactoryGirl.create(:user) }
+        let(:user) { FactoryGirl.create(:user) }
+        let(:non_admin) { FactoryGirl.create(:user) }
         before { sign_in non_admin, no_capybara: true }
 
         describe "submitting a DELETE request to the Users#destroy admin" do
