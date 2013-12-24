@@ -111,7 +111,29 @@ footer {
   @include box-sizing;
 }
 
-/* sidebar */
+/* mcroposts */
+.microposts {
+  list-style: none;
+  margin: 10px 0 0 0;
+  li {
+    padding: 10px 0;
+    border-top: 1px solid #e8e8e8;
+  }
+}
+
+.content {
+  display: block;
+}
+
+.timestamp {
+  color: $grayLight;
+}
+
+.gravater {
+  float: left;
+  margin-right: 10px;
+}
+
 aside {
   section {
     padding: 10px 0;
@@ -133,11 +155,10 @@ aside {
       margin-top: 0px;
     }
   }
-}
-
-.gravater {
-  float: left;
-  margin-right: 10px;
+  textarea {
+    height: 100px;
+    margin-right: 10px;
+  }
 }
 
 /* forms */
