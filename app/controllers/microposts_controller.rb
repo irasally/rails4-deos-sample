@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class MicropostsController < ApplicationController
   before_action :signed_in_user
   def create
@@ -6,6 +7,7 @@ class MicropostsController < ApplicationController
       flash[:success] = "Micropost created!"
       redirect_to root_url
     else
+      @feed_itemd = [] #Postに失敗したときにFeedが表示されない問題の回避
       render 'static_pages/home'
     end
   end
