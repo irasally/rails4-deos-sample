@@ -59,49 +59,60 @@ describe "AuthenticationPages" do
             it { should have_title('Sign in') }
           end
 
-          describe "when attempting to visit a protected page" do
-            before do
-              visit edit_user_path(user)
-              fill_in "Email", with: user.email
-              fill_in "Password", with: user.password
-              click_button 'Sign in'
-            end
-            describe "after signing in" do
-              it "should render the desired protedted page" do
-                expect(page).to have_title('Edit user')
-              end
-            end
+        end
 
-            describe "when signing in again" do
-              before do
-                delete signout_path
-                visit signin_path
-                fill_in "Email", with: user.email
-                fill_in "Password", with: user.password
-                click_button 'Sign in'
-              end
-              it "should render the default(profile) page" do
-                expect(page).to have_title(user.name)
-                expect(page).not_to have_title('Edit user')
-              end
-
+        describe "when attempting to visit a protected page" do
+          before do
+            visit edit_user_path(user)
+            fill_in "Email", with: user.email
+            fill_in "Password", with: user.password
+            click_button 'Sign in'
+          end
+          describe "after signing in" do
+            it "should render the desired protedted page" do
+              expect(page).to have_title('Edit user')
             end
           end
+        end
 
-          describe "when attempting to visit for non-singin user's page " do
-            before { sign_in user, no_capybara: true }
-            describe "submitting a GET request to the Users#new action" do
-              before { get signup_path }
-              specify { expect(response.body).not_to match(full_title('Sign up')) }
-              specify { expect(response).to redirect_to(root_url) }
-            end
+        describe "when signing in again" do
+          before do
+            delete signout_path
+            visit signin_path
+            fill_in "Email", with: user.email
+            fill_in "Password", with: user.password
+            click_button 'Sign in'
+          end
+          it "should render the default(profile) page" do
+            expect(page).to have_title(user.name)
+            expect(page).not_to have_title('Edit user')
+          end
+        end
 
-            describe "submitting a POST request to the Users#create action" do
-              new_user = User.new(name: 'Test', email: 'hoge@example.com')
-              before { post users_path(new_user) }
-              specify { expect(response).to redirect_to(root_url) }
-            end
+        describe "when attempting to visit for non-singin user's page " do
+          before { sign_in user, no_capybara: true }
+          describe "submitting a GET request to the Users#new action" do
+            before { get signup_path }
+            specify { expect(response.body).not_to match(full_title('Sign up')) }
+            specify { expect(response).to redirect_to(root_url) }
+          end
+          describe "submitting a POST request to the Users#create action" do
+            new_user = User.new(name: 'Test', email: 'hoge@example.com')
+            before { post users_path(new_user) }
+            specify { expect(response).to redirect_to(root_url) }
+          end
+        end
 
+        describe "in the Microposts Controller" do
+
+          describe "submitting to the create action" do
+            before { post microposts_path }
+            specify { expect(response).to redirect_to(signin_path) }
+          end
+
+          describe "submitting to the destroy action" do
+            before { delete microposts_path(FactoryGirl.create(:micropost)) }
+            specify { expect(response).to redirect_to(signin_path) }
           end
         end
       end
