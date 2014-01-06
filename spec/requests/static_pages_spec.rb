@@ -30,6 +30,22 @@ describe "StaticPages" do
           expect(page).to have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      it "should render the multiple micropost's count" do
+        expect(page).to have_content("2 microposts")
+      end
+
+      it "should render the single micropost's count" do
+        user.feed.destroy(1)
+        visit root_path
+        expect(page).to have_content("1 micropost")
+      end
+
+      it "should render the no micropost's count" do
+        user.feed.destroy_all
+        visit root_path
+        expect(page).to have_content("0 microposts")
+      end
     end
   end
 
