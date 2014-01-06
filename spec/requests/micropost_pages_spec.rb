@@ -39,4 +39,22 @@ describe "MicropostPages" do
       end
     end
   end
+
+  describe "micropost pagenation" do
+    before do
+      # FIXME
+      50.times{ FactoryGirl.create(:micropost, user: user) }
+      visit root_path
+    end
+    after do
+      #FIXME
+      user.feed.delete_all
+    end
+    it { should have_selector('div.pagination') }
+    it "should list each microposts" do
+      user.feed.paginate(page:1).each do |feed|
+        expect(page).to have_selector("li##{feed.id}")
+      end
+    end
+  end
 end
