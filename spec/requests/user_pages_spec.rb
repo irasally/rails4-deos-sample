@@ -56,6 +56,26 @@ describe "UserPages" do
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
     end
+
+    describe "micropost delete link" do
+      let(:another_user) { FactoryGirl.create(:user, email: 'another@example.com') }
+      let!(:another_m1) { FactoryGirl.create(:micropost, user: another_user, content: 'Fooooo') }
+      before do
+        sign_in user
+      end
+      describe "signed_in user's page" do
+        it "should have micropost delete link" do
+          visit user_path(user)
+          expect(page).to have_link('delete')
+        end
+      end
+      describe "non signed_in user's page" do
+        it "should not have micropost delete link" do
+          visit user_path(another_user)
+          expect(page).not_to have_link('delete')
+        end
+      end
+    end
   end
 
   describe "signup" do
