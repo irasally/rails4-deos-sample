@@ -57,4 +57,21 @@ describe "MicropostPages" do
       end
     end
   end
+
+  describe "micropost contents wrapping" do
+    before do
+      FactoryGirl.create(:micropost, user: user, content: 'Lorem ipsum dolor sit amet')
+      FactoryGirl.create(:micropost, user: user, content: 'Longggggggggggggggggggggggggggcontenttttttttttttttttttttttttwraaaaaaaaaaap')
+      visit root_path
+    end
+    after do
+      #FIXME
+      user.feed.delete_all
+    end
+    it { should have_selector('span.content', text: 'Lorem ipsum dolor sit amet') }
+    it { should_not have_selector('span.content', text: 'Longggggggggggggggggggggggggggcontenttttttttttttttttttttttttwraaaaaaaaaaap') }
+    it { should have_selector('span.content', text: 'Longgggggggggggggggggggggggggg') }
+    it { should have_selector('span.content', text: 'contentttttttttttttttttttttttt') }
+    it { should have_selector('span.content', text: 'wraaaaaaaaaaap') }
+  end
 end
