@@ -75,3 +75,22 @@ describe "MicropostPages" do
     it { should have_selector('span.content', text: 'wraaaaaaaaaaap') }
   end
 end
+
+describe "micropost left charactors counter", :js => true do
+  subject { page }
+
+  let(:user) { FactoryGirl.create(:user) }
+  before do
+    sign_in user
+    visit root_path
+  end
+  it { should have_selector('#counter', text:'140')}
+
+  describe "should decrease when input contents" do
+    before do
+      fill_in 'micropost_content', with: 'abcde'
+    end
+    it{ should_not have_selector('#counter', text:'140') }
+    it{ should have_selector('#counter', text:'135') }
+  end
+end
