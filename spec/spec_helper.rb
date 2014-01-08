@@ -28,7 +28,7 @@ Spork.prefork do
     # If you're not using ActiveRecord, or you'd prefer not to run each of
     # your examples within a transaction, remove the following line or
     # assign false instead of true.
-    config.use_transactional_fixtures = true
+    config.use_transactional_fixtures = false # use database-cleaner
     # If true, the base class of anonymous controllers will be inferred
     # automatically. This will be the default behavior in future versions of
     # rspec-rails.
@@ -43,7 +43,26 @@ Spork.prefork do
     config.expect_with :rspec do |c|
       c.syntax = :expect
     end
+    require 'capybara-webkit'
+    Capybara.javascript_driver = :webkit
+    # for database_cleaner
+    config.before :each do
+      if Capybara.current_driver == :rack_test
+        DatabaseCleaner.strategy = :transaction
+        DatabaseCleaner.start
+      else
+        DatabaseCleaner.strategy = :truncation
+      end
+    end
+    config.after(:each) do
+      DatabaseCleaner.clean
+    end
   end
+  # headless settings
+  require "headless"
+  headless = Headless.new(:display => 99)
+  headless.start
+  at_exit{ headless.destroy }
 end
 
 Spork.each_run do
