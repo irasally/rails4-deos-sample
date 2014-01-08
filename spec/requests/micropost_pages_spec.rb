@@ -39,4 +39,58 @@ describe "MicropostPages" do
       end
     end
   end
+
+  describe "micropost pagenation" do
+    before do
+      # FIXME
+      50.times{ FactoryGirl.create(:micropost, user: user) }
+      visit root_path
+    end
+    after do
+      #FIXME
+      user.feed.delete_all
+    end
+    it { should have_selector('div.pagination') }
+    it "should list each microposts" do
+      user.feed.paginate(page:1).each do |feed|
+        expect(page).to have_selector("li##{feed.id}")
+      end
+    end
+  end
+
+  describe "micropost contents wrapping" do
+    before do
+      FactoryGirl.create(:micropost, user: user, content: 'Lorem ipsum dolor sit amet')
+      FactoryGirl.create(:micropost, user: user, content: 'Longggggggggggggggggggggggggggcontenttttttttttttttttttttttttwraaaaaaaaaaap')
+      visit root_path
+    end
+    after do
+      #FIXME
+      user.feed.delete_all
+    end
+    it { should have_selector('span.content', text: 'Lorem ipsum dolor sit amet') }
+    it { should_not have_selector('span.content', text: 'Longggggggggggggggggggggggggggcontenttttttttttttttttttttttttwraaaaaaaaaaap') }
+    it { should have_selector('span.content', text: 'Longgggggggggggggggggggggggggg') }
+    it { should have_selector('span.content', text: 'contentttttttttttttttttttttttt') }
+    it { should have_selector('span.content', text: 'wraaaaaaaaaaap') }
+  end
+end
+
+describe "micropost left charactors counter", :js => true do
+  subject { page }
+
+  let(:user) { FactoryGirl.create(:user) }
+  before do
+    sign_in user
+    visit root_path
+  end
+  it { should have_selector('#counter', text:'140')}
+
+  describe "should decrease when input contents" do
+    before do
+      fill_in 'micropost_content', with: 'abcde'
+    end
+    it{ should_not have_selector('#counter', text:'140') }
+    it{ should have_selector('#counter', text:'135') }
+  end
 end
