@@ -17,6 +17,7 @@ describe User do
   it { should respond_to(:microposts) }
   it { should respond_to(:feed) }
   it { should respond_to(:relationship) }
+  it { should respond_to(:followed_users) }
 
   it { should be_valid }
   it { should_not be_admin }
