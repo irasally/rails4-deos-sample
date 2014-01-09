@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
   has_many :microposts, dependent: :destroy
-  has_many :relationship, foreign_key: "follower_id", dependent: :destroy
+  has_many :relationships, foreign_key: "follower_id", dependent: :destroy
   has_many :followed_users, through: :relationships, source: :followed
   has_secure_password
   before_save { email.downcase! }
@@ -24,6 +24,18 @@ class User < ActiveRecord::Base
   def feed
     # 仮実装
     Micropost.where("user_id = ?", id)
+  end
+
+  def follow!(other_user)
+    self.relationships.create!(followed_id: other_user.id)
+  end
+
+  def unfollow!(other_user)
+    self.relationships.find_by(followed_id: other_user.id).destroy
+  end
+
+  def following?(other_user)
+    self.relationships.find_by(followed_id: other_user.id)
   end
 
   private
