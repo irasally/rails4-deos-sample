@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
   has_many :microposts, dependent: :destroy
+  has_many :relationship, foreign_key: "follower_id", dependent: :destroy
   has_secure_password
   before_save { email.downcase! }
   before_create :create_remember_token
