@@ -31,21 +31,35 @@ describe "StaticPages" do
         end
       end
 
-      it "should render the multiple micropost's count" do
-        expect(page).to have_content("2 microposts")
+      describe "user microposts counts" do
+        it "should render the multiple micropost's count" do
+          expect(page).to have_content("2 microposts")
+        end
+
+        it "should render the single micropost's count" do
+          user.feed.destroy(1)
+          visit root_path
+          expect(page).to have_content("1 micropost")
+        end
+
+        it "should render the no micropost's count" do
+          user.feed.destroy_all
+          visit root_path
+          expect(page).to have_content("0 microposts")
+        end
       end
 
-      it "should render the single micropost's count" do
-        user.feed.destroy(1)
-        visit root_path
-        expect(page).to have_content("1 micropost")
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("0 following", href: following_user_path(user) ) }
+        it { should have_link("1 followers", href: followers_user_path(user) ) }
       end
 
-      it "should render the no micropost's count" do
-        user.feed.destroy_all
-        visit root_path
-        expect(page).to have_content("0 microposts")
-      end
     end
   end
 
