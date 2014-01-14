@@ -126,6 +126,35 @@ describe User do
     its(:remember_token) { should_not be_blank }
   end
 
+  describe "relationship associations" do
+    let(:followed_user) {  FactoryGirl.create(:user) }
+    let(:follower_user) {  FactoryGirl.create(:user) }
+    before do
+      @user.save
+      followed_user.save
+      follower_user.save
+    end
+    let!(:user_followed) do
+      FactoryGirl.create(:relationship, follower: @user, followed: followed_user)
+    end
+    let!(:user_follower) do
+      FactoryGirl.create(:relationship, follower: follower_user, followed: @user)
+    end
+    it "should destroy associated relationships" do
+      relationships = @user.relationships.to_a
+      reverse_relationships = @user.reverse_relationships.to_a
+      @user.destroy
+      expect(relationships).not_to be_empty
+      relationships.each do |relationship|
+        expect(Relationship.where(id: relationship.id)).to be_empty
+      end
+      expect(reverse_relationships).not_to be_empty
+      reverse_relationships.each do |relationship|
+        expect(Relationship.where(id: relationship.id)).to be_empty
+      end
+    end
+  end
+
   describe "micropost associations" do
     before { @user.save }
     let!(:older_micropost) do

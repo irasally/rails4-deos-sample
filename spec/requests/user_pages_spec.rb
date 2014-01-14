@@ -115,7 +115,7 @@ describe "UserPages" do
         end
       end
 
-      describe "unfollowing a user " do
+      describe "unfollowing a user" do
         before do
           user.follow!(other_user)
           visit user_path(other_user)
@@ -137,6 +137,16 @@ describe "UserPages" do
           before { click_button "Unfollow" }
           it { should have_xpath("//input[@value='Follow']") }
         end
+      end
+
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit user_path(other_user)
+        end
+        it { should have_link("1 following", href: following_user_path(other_user)) }
+        it { should have_link("0 followers", href: followers_user_path(other_user)) }
       end
     end
   end
